@@ -32,7 +32,7 @@ import { useContext } from "react"
 import { AuthContext } from "@/providers/AuthProvider"
 
 export function NavUser() {
-   const {user} = useContext(AuthContext)
+   const {user,handleLogout} = useContext(AuthContext)
   const { isMobile } = useSidebar()
 
   return (
@@ -94,11 +94,14 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link to='/sign-up'><Button>Sign Up</Button></Link>
-              <Link to='/sign-in'><Button>Sign In</Button></Link>
+              {
+                user?.email?<Button className='w-full' variant='outline' onClick={handleLogout}><LogOutIcon />
+              Sign out</Button>:<> <Link to='/sign-up'><Button>Sign Up</Button></Link>
+              <Link to='/sign-in'><Button>Sign In</Button></Link></>
+              }
+             
 
-              <LogOutIcon />
-              Log out
+              
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,5 +1,5 @@
 import { auth } from "@/firebase/firebase.config";
-import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext(null);
@@ -8,6 +8,22 @@ const provider = new GoogleAuthProvider();
 const AuthProvider = ({children}) => {
  const [loading,setLoading] = useState(true);
    const [user,setUser] = useState(null);
+
+      // new user
+    const createNewUser = (email, password) =>{
+        setLoading(true)
+        return createUserWithEmailAndPassword(auth, email, password)
+    }
+    // update profile
+    const updateUserProfile = (updateData) =>{
+        // console.log(updateData)
+        setLoading(true)
+        return updateProfile(auth.currentUser,updateData)
+          
+    }
+
+
+
      //login with google
     const googleLoginUser =()=>{
         return signInWithPopup(auth, provider)
@@ -48,9 +64,10 @@ const AuthProvider = ({children}) => {
      
 
      const info={
-       name:'task bite',
        googleLoginUser,
        handleLogout,
+       createNewUser,
+       updateUserProfile,
        loading,
        user
     }

@@ -1,4 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar"
+import TaskManager from "@/components/TaskManager"
+import TaskCard from "@/components/TaskManager"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,6 +17,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { AuthContext } from "@/providers/AuthProvider"
+import { CirclePlus } from "lucide-react"
 
 import { useContext } from "react"
 
@@ -57,8 +60,9 @@ export default function Dashboard() {
           {/* </div> */}
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-10">
           
-          <Button className='mb-4'>Add Task</Button>
-          <hr />
+          {/* <Button className='mb-4'><CirclePlus />Add Task</Button>
+          <hr /> */}
+          <TaskManager></TaskManager>
           </div>
 
         </div>
