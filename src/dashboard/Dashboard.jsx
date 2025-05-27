@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
@@ -54,9 +55,10 @@ export default function Dashboard() {
             <div className="aspect-video rounded-xl bg-muted/50" /> */}
             {/* <div className="aspect-video rounded-xl bg-muted/50" /> */}
           {/* </div> */}
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-          <h2>card</h2>
+          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-10">
           
+          <Button className='mb-4'>Add Task</Button>
+          <hr />
           </div>
 
         </div>

@@ -8,6 +8,7 @@ import MainLayout from './MainLayout/MainLayout';
 import Dashboard from './dashboard/Dashboard';
 import AuthProvider from './providers/AuthProvider';
 import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')).render(
       {/* <Route path="/" element={<Home />} /> */}
       <Route path="/" element={<Dashboard />} />
       <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/sign-in" element={<SignIn />} />
        {/* </Route> */}
     </Routes>
   </BrowserRouter>
