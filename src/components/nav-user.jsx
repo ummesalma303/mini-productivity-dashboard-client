@@ -78,7 +78,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <UserCircleIcon />
-                Account
+                Account 
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCardIcon />
@@ -86,7 +86,7 @@ export function NavUser({
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <BellIcon />
-                Notifications
+                Notifications 
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

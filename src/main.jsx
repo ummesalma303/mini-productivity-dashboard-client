@@ -6,9 +6,11 @@ import { BrowserRouter, Routes, Route } from "react-router";
 // import Home from './pages/Home';
 import MainLayout from './MainLayout/MainLayout';
 import Dashboard from './dashboard/Dashboard';
+import AuthProvider from './providers/AuthProvider';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+      <AuthProvider>
     <BrowserRouter>
    <Routes>
        {/* <Route  element={<MainLayout />} > */}
@@ -17,5 +19,6 @@ createRoot(document.getElementById('root')).render(
        {/* </Route> */}
     </Routes>
   </BrowserRouter>
+      </AuthProvider>
   </StrictMode>,
 )
