@@ -26,6 +26,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Button } from "./ui/button"
+import { Link } from "react-router"
 
 export function NavUser({
   user,
@@ -91,6 +93,8 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
+              <Link to='/sign-up'><Button>Sign Up</Button></Link>
+
               <LogOutIcon />
               Log out
             </DropdownMenuItem>
