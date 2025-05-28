@@ -39,9 +39,9 @@ const onToggleCompletion = (id) => {
     axios.patch(`http://localhost:5000/${id}`,{completedTask})
     .then(res=>{
       console.log(res)
+      refetch()
       toast.success("update your task.")
 
-       refetch()
     })
     .catch(err=>console.log(err))
   };
@@ -50,6 +50,7 @@ const onToggleCompletion = (id) => {
  const onSubmit = (data ) => {
   axios.patch(`http://localhost:5000/task/${task._id}`, data)
   .then(res => {
+    refetch()
     toast.success('Task successfully update')
     console.log(res)
   })
@@ -74,7 +75,7 @@ const onToggleCompletion = (id) => {
           .delete(`http://localhost:5000/task/${id}`)
           .then((res) => {
             refetch();
-            if (res.message) {
+            if (res.status === 201) {
               Swal.fire({
                 title: "Deleted!",
                 text: "Your file has been deleted.",
@@ -83,7 +84,7 @@ const onToggleCompletion = (id) => {
             }
             console.log(res.data);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => toast.err(err?.message));
       }
     });
   };
@@ -215,10 +216,10 @@ const onToggleCompletion = (id) => {
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              {/* <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Clock className="h-3 w-3" />
-                {task.createdAt}
-              </div>
+                 { format(new Date(task.date), "yyyy-MM-dd")}
+              </div> */}
             </div>
           </>
         )}

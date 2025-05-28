@@ -32,9 +32,12 @@ const AddTask = () => {
     axios.post('http://localhost:5000/', taskData)
       .then(res => {
         console.log(res)
-        toast.success('successfully add your task')
-        reset()
-        setOpen(false)
+        if(res?.status===201){
+          toast.success('successfully add your task')
+          reset()
+          setOpen(false)
+
+        }
       })
       .catch(err => console.log(err))
   }

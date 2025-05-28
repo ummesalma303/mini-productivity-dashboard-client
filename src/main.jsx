@@ -13,6 +13,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import Goals from './pages/Goals';
 
 const queryClient = new QueryClient()
 
@@ -27,6 +28,7 @@ createRoot(document.getElementById('root')).render(
       <Route path="/" element={<Dashboard />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/sign-in" element={<SignIn />} />
+      <Route path="/goals" element={<Goals />} />
        {/* </Route> */}
     </Routes>
       </BrowserRouter>
