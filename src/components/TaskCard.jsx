@@ -1,0 +1,154 @@
+import { useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { Badge } from "./ui/badge";
+import { Edit2, Trash2, Save, X, Calendar, Clock } from "lucide-react";
+
+export default function TaskCard({
+  task,
+  isEditing,
+  onToggleCompletion,
+  onStartEditing,
+  onDelete,
+  onSaveEdit,
+  onCancelEdit,
+}) {
+  const [editForm, setEditForm] = useState({
+    title: task.title,
+    description: task.description,
+    priority: task.priority,
+    dueDate: task.dueDate,
+  });
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "high":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "low":
+        return "bg-green-100 text-green-800 border-green-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  return (
+    <Card className={`transition-all duration-200 hover:shadow-md ${task.completed ? "opacity-75 bg-gray-50" : ""}`}>
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3 flex-1">
+            <Checkbox
+              checked={task.completed}
+              onCheckedChange={() => onToggleCompletion(task.id)}
+              className="mt-1"
+            />
+            <div className="flex-1 min-w-0">
+              {isEditing ? (
+                <input
+                  value={editForm.title}
+                  onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                  placeholder="Task title"
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              ) : (
+                <CardTitle
+                  className={`text-lg leading-tight ${task.completed ? "line-through text-muted-foreground" : ""}`}
+                >
+                  {task.title}
+                </CardTitle>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            {!isEditing && (
+              <>
+                <Button variant="ghost" size="icon" onClick={() => onStartEditing(task.id)} className="h-8 w-8">
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onDelete(task.id)}
+                  className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+            {isEditing && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onSaveEdit(task.id, editForm)}
+                  className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+                >
+                  <Save className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={onCancelEdit} className="h-8 w-8">
+                  <X className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        {isEditing ? (
+          <div className="space-y-3">
+            <textarea
+              value={editForm.description}
+              onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+              placeholder="Task description"
+              className="w-full min-h-[80px] px-3 py-2 border rounded-md"
+            />
+            <div className="flex gap-3">
+              <select
+                value={editForm.priority}
+                onChange={(e) => setEditForm({ ...editForm, priority: e.target.value })}
+                className="px-3 py-1 border rounded-md text-sm"
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+              <input
+                type="date"
+                value={editForm.dueDate}
+                onChange={(e) => setEditForm({ ...editForm, dueDate: e.target.value })}
+                className="flex-1 px-3 py-2 border rounded-md"
+              />
+            </div>
+          </div>
+        ) : (
+          <>
+            {task.description && (
+              <p className={`text-sm text-muted-foreground mb-3 ${task.completed ? "line-through" : ""}`}>
+                {task.description}
+              </p>
+            )}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className={getPriorityColor(task.priority)}>
+                  {task.priority}
+                </Badge>
+                {task.dueDate && (
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Calendar className="h-3 w-3" />
+                    {task.dueDate}
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Clock className="h-3 w-3" />
+                {task.createdAt}
+              </div>
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
