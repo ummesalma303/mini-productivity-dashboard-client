@@ -1,48 +1,41 @@
 import { useState } from "react";
 import { Card, CardContent } from "./ui/card";
-import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
+
 import TaskCard from "./TaskCard";
 import AddTask from "./AddTask";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import Loading from "./Loading";
+// import axios from "axios";
 
 export default function TaskManager() {
-  const [tasks, setTasks] = useState([
-    {
-      id: "1",
-      title: "Complete project documentation",
-      description: "Write comprehensive documentation for the new feature implementation",
-      completed: false,
-      priority: "high",
-      dueDate: "2024-01-15",
-      createdAt: "2024-01-10",
-    },
-    {
-      id: "2",
-      title: "Review code changes",
-      description: "Review pull requests from team members",
-      completed: true,
-      priority: "medium",
-      dueDate: "2024-01-12",
-      createdAt: "2024-01-08",
-    },
-  ]);
-
+  // const [completeTask, setCompeleteTask] =useState(null)
   const [editingTaskId, setEditingTaskId] = useState(null);
 
+   const {data:tasks=[],isLoading,refetch} =useQuery({
+        queryKey:["tasks"],
+        queryFn: async () => {
+    const res = await axios.get(`http://localhost:5000/task`)
+    console.log(res.data)
+         return res.data   
+        }
+    })
+
+    if (isLoading) {
+      return  <Loading/>
+    }
   const deleteTask = (id) => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  const toggleTaskCompletion = (id) => {
-    setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)));
-  };
+  
 
   const startEditing = (id) => {
     setEditingTaskId(id);
   };
 
   const saveEdit = (id, updatedTask) => {
-    setTasks(tasks.map((task) => (task.id === id ? { ...task, ...updatedTask } : task)));
+    tasks.map((task) => (task.id === id ? { ...task, ...updatedTask } : task));
     setEditingTaskId(null);
   };
 
@@ -54,10 +47,7 @@ export default function TaskManager() {
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Task Manager</h1>
-
-<AddTask/>
-
-        
+             <AddTask/>   
       </div>
       <div className="grid gap-4">
         {tasks.length === 0 ? (
@@ -67,16 +57,17 @@ export default function TaskManager() {
             </CardContent>
           </Card>
         ) : (
-          tasks.map((task) => (
+          tasks?.map((task) => (
             <TaskCard
-              key={task.id}
+              key={task._id}
               task={task}
-              isEditing={editingTaskId === task.id}
-              onToggleCompletion={toggleTaskCompletion}
+              isEditing={editingTaskId === task._id}
+              
               onStartEditing={startEditing}
               onDelete={deleteTask}
               onSaveEdit={saveEdit}
               onCancelEdit={cancelEdit}
+              refetch={refetch}
             />
           ))
         )}

@@ -4,23 +4,39 @@ import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Badge } from "./ui/badge";
 import { Edit2, Trash2, Save, X, Calendar, Clock } from "lucide-react";
+import axios from "axios";
+import { format } from "date-fns";
 
 export default function TaskCard({
   task,
   isEditing,
-  onToggleCompletion,
+//   onToggleCompletion,
   onStartEditing,
   onDelete,
   onSaveEdit,
   onCancelEdit,
+   refetch
 }) {
+    const [completedTask, setCompletedTask] = useState(false)
   const [editForm, setEditForm] = useState({
     title: task.title,
     description: task.description,
     priority: task.priority,
     dueDate: task.dueDate,
   });
+const onToggleCompletion = (id) => {
+    console.log(task,id,completedTask)
+    setCompletedTask(!completedTask)
 
+    axios.patch(`http://localhost:5000/${id}`,{completedTask})
+    .then(res=>{
+      console.log(res)
+       refetch()
+    })
+    .catch(err=>console.log(err))
+    // tasks?.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task));
+  };
+ 
   const getPriorityColor = (priority) => {
     switch (priority) {
       case "high":
@@ -41,7 +57,8 @@ export default function TaskCard({
           <div className="flex items-start gap-3 flex-1">
             <Checkbox
               checked={task.completed}
-              onCheckedChange={() => onToggleCompletion(task.id)}
+              // onChange={()=>onToggleCompletion(task?._id)}
+              onCheckedChange={() => onToggleCompletion(task?._id)}
               className="mt-1"
             />
             <div className="flex-1 min-w-0">
@@ -54,7 +71,7 @@ export default function TaskCard({
                 />
               ) : (
                 <CardTitle
-                  className={`text-lg leading-tight ${task.completed ? "line-through text-muted-foreground" : ""}`}
+                  className={`text-lg leading-tight ${task?.completed ? "line-through text-muted-foreground" : ""}`}
                 >
                   {task.title}
                 </CardTitle>
@@ -134,10 +151,10 @@ export default function TaskCard({
                 <Badge variant="outline" className={getPriorityColor(task.priority)}>
                   {task.priority}
                 </Badge>
-                {task.dueDate && (
+                {task.date && (
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3" />
-                    {task.dueDate}
+                    { format(new Date(task.date), "yyyy-MM-dd")}
                   </div>
                 )}
               </div>

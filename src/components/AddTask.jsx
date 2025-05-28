@@ -27,7 +27,8 @@ const AddTask = () => {
   } = useForm()
 
   const onSubmit = (data) => {
-    axios.post('http://localhost:5000/', data)
+    const taskData ={...data, completed:true}
+    axios.post('http://localhost:5000/', taskData)
       .then(res => {
         console.log(res)
         reset()
