@@ -24,21 +24,14 @@ export default function TaskManager() {
     if (isLoading) {
       return  <Loading/>
     }
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
+  
   
 
   const startEditing = (id) => {
     setEditingTaskId(id);
   };
 
-  const saveEdit = (id, updatedTask) => {
-    tasks.map((task) => (task.id === id ? { ...task, ...updatedTask } : task));
-    setEditingTaskId(null);
-  };
-
+ 
   const cancelEdit = () => {
     setEditingTaskId(null);
   };
@@ -64,8 +57,8 @@ export default function TaskManager() {
               isEditing={editingTaskId === task._id}
               
               onStartEditing={startEditing}
-              onDelete={deleteTask}
-              onSaveEdit={saveEdit}
+              // onDelete={deleteTask}
+              // onSaveEdit={saveEdit}
               onCancelEdit={cancelEdit}
               refetch={refetch}
             />

@@ -6,6 +6,9 @@ import { Badge } from "./ui/badge";
 import { Edit2, Trash2, Save, X, Calendar, Clock } from "lucide-react";
 import axios from "axios";
 import { format } from "date-fns";
+import { toast } from 'sonner';
+import { useForm } from "react-hook-form";
+import Swal from 'sweetalert2'
 
 export default function TaskCard({
   task,
@@ -13,28 +16,76 @@ export default function TaskCard({
 //   onToggleCompletion,
   onStartEditing,
   onDelete,
-  onSaveEdit,
-  onCancelEdit,
+  // onSaveEdit,
+  // onCancelEdit,
    refetch
-}) {
-    const [completedTask, setCompletedTask] = useState(false)
-  const [editForm, setEditForm] = useState({
-    title: task.title,
-    description: task.description,
-    priority: task.priority,
-    dueDate: task.dueDate,
-  });
+})
+{
+  const [completedTask, setCompletedTask] = useState(false)
+  const {
+        register,
+        formState: { errors },
+        // reset,
+        handleSubmit,
+      } = useForm()
+
+  
+  // complete mark mark task feature
 const onToggleCompletion = (id) => {
+    
     console.log(task,id,completedTask)
     setCompletedTask(!completedTask)
 
     axios.patch(`http://localhost:5000/${id}`,{completedTask})
     .then(res=>{
       console.log(res)
+      toast.success("update your task.")
+
        refetch()
     })
     .catch(err=>console.log(err))
-    // tasks?.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task));
+  };
+
+  // update task
+ const onSubmit = (data ) => {
+  axios.patch(`http://localhost:5000/task/${task._id}`, data)
+  .then(res => {
+    toast.success('Task successfully update')
+    console.log(res)
+  })
+  .catch(err=>console.log(err))
+  console.log(data,task._id)
+ }
+
+// delete task
+ const handleDelete = (id) => {
+    console.log(id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`https://assignment-12-server-three-sage.vercel.app/parcel/${id}`)
+          .then((res) => {
+            refetch();
+            if (res.data.deletedCount > 0) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success",
+              });
+            }
+            console.log(res.data);
+          })
+          .catch((err) => console.log(err));
+      }
+    });
   };
  
   const getPriorityColor = (priority) => {
@@ -52,8 +103,10 @@ const onToggleCompletion = (id) => {
 
   return (
     <Card className={`transition-all duration-200 hover:shadow-md ${task.completed ? "opacity-75 bg-gray-50" : ""}`}>
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-3">
+
+      <form  onSubmit={handleSubmit(onSubmit)}>
+      <CardHeader className="pb-3 ">
+        <div className="flex items-start justify-between gap-3 ">
           <div className="flex items-start gap-3 flex-1">
             <Checkbox
               checked={task.completed}
@@ -63,12 +116,14 @@ const onToggleCompletion = (id) => {
             />
             <div className="flex-1 min-w-0">
               {isEditing ? (
+               <>
                 <input
-                  value={editForm.title}
-                  onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                  defaultValue={task?.title}
+                 {...register("title", { required: true })}
                   placeholder="Task title"
                   className="w-full px-3 py-2 border rounded-md"
                 />
+                 {errors.title && <span className='text-red-500'>This field is required</span>}</>
               ) : (
                 <CardTitle
                   className={`text-lg leading-tight ${task?.completed ? "line-through text-muted-foreground" : ""}`}
@@ -78,16 +133,16 @@ const onToggleCompletion = (id) => {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 ">
             {!isEditing && (
               <>
-                <Button variant="ghost" size="icon" onClick={() => onStartEditing(task.id)} className="h-8 w-8">
+                <Button type="button" variant="ghost" size="icon" onClick={() => onStartEditing(task._id)} className="h-8 w-8">
                   <Edit2 className="h-4 w-4" />
                 </Button>
-                <Button
+                <Button type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={() => onDelete(task.id)}
+                  onClick={() => handleDelete(task.id)}
                   className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -96,15 +151,15 @@ const onToggleCompletion = (id) => {
             )}
             {isEditing && (
               <>
-                <Button
+                <Button type="submit"
                   variant="ghost"
                   size="icon"
-                  onClick={() => onSaveEdit(task.id, editForm)}
+                  
                   className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
                 >
                   <Save className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="icon" onClick={onCancelEdit} className="h-8 w-8">
+                <Button type="button" variant="ghost" size="icon" onClick={onCancelEdit} className="h-8 w-8">
                   <X className="h-4 w-4" />
                 </Button>
               </>
@@ -112,19 +167,21 @@ const onToggleCompletion = (id) => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 ">
         {isEditing ? (
           <div className="space-y-3">
             <textarea
-              value={editForm.description}
-              onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+              defaultValue={task?.description}
+              {...register("description", { required: true })}
               placeholder="Task description"
               className="w-full min-h-[80px] px-3 py-2 border rounded-md"
             />
+            {errors.description && <span className='text-red-500'>This field is required</span>}
+
             <div className="flex gap-3">
               <select
-                value={editForm.priority}
-                onChange={(e) => setEditForm({ ...editForm, priority: e.target.value })}
+               defaultValue={task?.priority}
+               {...register("priority")}
                 className="px-3 py-1 border rounded-md text-sm"
               >
                 <option value="low">Low</option>
@@ -133,8 +190,8 @@ const onToggleCompletion = (id) => {
               </select>
               <input
                 type="date"
-                value={editForm.dueDate}
-                onChange={(e) => setEditForm({ ...editForm, dueDate: e.target.value })}
+                defaultValue={task?.date}
+                 {...register("date")}
                 className="flex-1 px-3 py-2 border rounded-md"
               />
             </div>
@@ -149,9 +206,9 @@ const onToggleCompletion = (id) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className={getPriorityColor(task.priority)}>
-                  {task.priority}
+                  {task?.priority}
                 </Badge>
-                {task.date && (
+                {task?.date && (
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3" />
                     { format(new Date(task.date), "yyyy-MM-dd")}
@@ -166,6 +223,8 @@ const onToggleCompletion = (id) => {
           </>
         )}
       </CardContent>
+
+      </form>
     </Card>
   );
 }

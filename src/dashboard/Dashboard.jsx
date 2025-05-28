@@ -9,7 +9,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
+// import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
@@ -17,14 +17,17 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { AuthContext } from "@/providers/AuthProvider"
-import { CirclePlus } from "lucide-react"
+// import { Toaster } from "@/components/ui/toaster"
 
 import { useContext } from "react"
+// import { Toaster } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 
 export default function Dashboard() {
   const name = useContext(AuthContext)
   console.log(name)
   return (
+ <>
     <SidebarProvider
       style={
         {
@@ -68,5 +71,8 @@ export default function Dashboard() {
         </div>
       </SidebarInset>
     </SidebarProvider>
+            <Toaster position="top-center"/>
+
+ </>
   )
 }
