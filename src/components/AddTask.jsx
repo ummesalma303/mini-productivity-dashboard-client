@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from './ui/textarea'
 import { Plus, Save } from 'lucide-react'
 import { CardContent } from './ui/card'
+import { toast } from 'sonner'
 
 const AddTask = () => {
   const [open, setOpen] = useState(false)
@@ -31,6 +32,7 @@ const AddTask = () => {
     axios.post('http://localhost:5000/', taskData)
       .then(res => {
         console.log(res)
+        toast.success('successfully add your task')
         reset()
         setOpen(false)
       })

@@ -15,9 +15,9 @@ export default function TaskCard({
   isEditing,
 //   onToggleCompletion,
   onStartEditing,
-  onDelete,
+  
   // onSaveEdit,
-  // onCancelEdit,
+  onCancelEdit,
    refetch
 })
 {
@@ -71,10 +71,10 @@ const onToggleCompletion = (id) => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`https://assignment-12-server-three-sage.vercel.app/parcel/${id}`)
+          .delete(`http://localhost:5000/task/${id}`)
           .then((res) => {
             refetch();
-            if (res.data.deletedCount > 0) {
+            if (res.message) {
               Swal.fire({
                 title: "Deleted!",
                 text: "Your file has been deleted.",
@@ -142,7 +142,7 @@ const onToggleCompletion = (id) => {
                 <Button type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleDelete(task.id)}
+                  onClick={() => handleDelete(task._id)}
                   className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                   <Trash2 className="h-4 w-4" />
