@@ -48,7 +48,7 @@ export default function TaskManager() {
               <p className="text-muted-foreground">No tasks yet. Add your first task to get started!</p>
             </CardContent>
           </Card>
-        ) : <div className="grid grid-cols-2 gap-4">
+        ) : <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className=" space-y-4">
            <p className="underline underline-offset-2 text-gray-700">🔄Pending</p>
         {
