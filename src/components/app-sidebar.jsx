@@ -20,32 +20,20 @@ import { NavUser } from "./nav-user";
 const data = {
   navMain: [
     {
-      title: "Getting Started",
+      title: "Task",
       url: "/",
       items: [
         {
           title: "Goals",
           url: "/goals",
         },
-        {
-          title: "Project Structure",
-          url: "#",
-        },
+        
       ],
     },
    
     
     
-    {
-      title: "Community",
-      url: "#",
-      items: [
-        {
-          title: "Contribution Guide",
-          url: "#",
-        },
-      ],
-    },
+   
   ],
 }
 

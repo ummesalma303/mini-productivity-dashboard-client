@@ -14,6 +14,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import Goals from './pages/Goals';
+import TaskManager from './components/TaskManager';
 
 const queryClient = new QueryClient()
 
@@ -23,13 +24,14 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
     <BrowserRouter>
    <Routes>
-       {/* <Route  element={<MainLayout />} > */}
+       <Route path="/" element={<Dashboard />} >
       {/* <Route path="/" element={<Home />} /> */}
-      <Route path="/" element={<Dashboard />} />
+      {/* <Route path="/" element={<Dashboard />} /> */}
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/sign-in" element={<SignIn />} />
+      <Route path="/" element={<TaskManager />} />
       <Route path="/goals" element={<Goals />} />
-       {/* </Route> */}
+       </Route>
     </Routes>
       </BrowserRouter>
       </AuthProvider>
