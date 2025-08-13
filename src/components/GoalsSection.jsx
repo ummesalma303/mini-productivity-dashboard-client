@@ -11,8 +11,12 @@ import { Plus, Target, QuoteIcon, Check, X } from "lucide-react"
 import GoalsList from "./GoalsList"
 // import { useForm } from "react-hook-form"
 import AddGoals from "./AddGoals"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
+import Loading from "./Loading"
 
 export default function GoalsSection() {
+  
   const [weeklyGoals, setWeeklyGoals] = useState([])
   const [monthlyGoals, setMonthlyGoals] = useState([])
   const [quote, setQuote] = useState(null)
@@ -23,11 +27,12 @@ export default function GoalsSection() {
   const [isLoadingQuote, setIsLoadingQuote] = useState(true)
 
   //  const [open, setOpen] = useState(false)
- 
-
+//  fetch quote
   useEffect(() => {
     fetchQuote()
   }, [])
+  
+
 
   const fetchQuote = async () => {
     try {
@@ -46,6 +51,21 @@ export default function GoalsSection() {
     }
   }
 
+// goals
+   const {data:goals=[],isLoading,refetch} =useQuery({
+        queryKey:["tasks"],
+        queryFn: async () => {
+    const res = await axios.get(`http://localhost:5000/goals/`)
+    // console.log(res.data)
+         return res.data   
+        }
+    })
+
+    console.log(goals)
+
+    if (isLoading) {
+      return  <Loading/>
+    }
   // const addGoal = () => {
   //   if (!newGoal.title.trim()) return
 
@@ -169,7 +189,7 @@ export default function GoalsSection() {
 
             <TabsContent value="weekly" className="space-y-4">
               <GoalsList
-                goals={weeklyGoals}
+                goals={goals}
                 onToggle={toggleGoal}
                 onDelete={deleteGoal}
                 onUpdate={updateGoal}
@@ -180,7 +200,7 @@ export default function GoalsSection() {
 
             <TabsContent value="monthly" className="space-y-4">
               <GoalsList
-                goals={monthlyGoals}
+                goals={goals}
                 onToggle={toggleGoal}
                 onDelete={deleteGoal}
                 onUpdate={updateGoal}

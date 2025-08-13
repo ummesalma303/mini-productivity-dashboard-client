@@ -6,11 +6,12 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Target, Trash2, Edit3, Check, X } from "lucide-react"
 
 export default function GoalsList({ goals, onToggle, onDelete, onUpdate, editingGoal, setEditingGoal }) {
+ console.log(goals)
   const [editTitle, setEditTitle] = useState("")
   const [editDescription, setEditDescription] = useState("")
 
   const startEditing = (goal) => {
-    setEditingGoal(goal.id)
+    setEditingGoal(goal._id)
     setEditTitle(goal.title)
     setEditDescription(goal.description)
   }
@@ -37,11 +38,17 @@ export default function GoalsList({ goals, onToggle, onDelete, onUpdate, editing
   }
 
   return (
-    <div className="space-y-3">
-      {goals.map((goal) => (
-        <div key={goal.id} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-gray-50">
-          <Checkbox checked={goal.completed} onCheckedChange={() => onToggle(goal.id)} className="mt-1" />
+    <div className="space-y-3 bg-gray-300">
+      {goals?.map((goal) => (
+        <div key={goal._id} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-gray-50">
+            <div className="flex items-start">
+          <Checkbox checked={goal.completed} onCheckedChange={() => onToggle(goal._id)} className="mt-1" />
+          <div className="">
+              <h2>{goal?.goal_title}</h2>
+            <p>{goal?.goal_description}</p>
+          </div>
 
+            </div>
           <div className="flex-1 min-w-0">
             {editingGoal === goal.id ? (
               <div className="space-y-2">
@@ -63,11 +70,11 @@ export default function GoalsList({ goals, onToggle, onDelete, onUpdate, editing
                 <h4 className={`font-medium ${goal.completed ? "line-through text-gray-500" : ""}`}>{goal.title}</h4>
                 {goal.description && (
                   <p className={`text-sm text-gray-600 mt-1 ${goal.completed ? "line-through" : ""}`}>
-                    {goal.description}
+                    {goal?.goal_description}
                   </p>
                 )}
                 <p className="text-xs text-gray-400 mt-1">
-                  Created {new Date(goal.createdAt).toLocaleDateString()}
+                  Created {new Date(goal.date).toLocaleDateString()}
                 </p>
               </>
             )}
@@ -81,7 +88,7 @@ export default function GoalsList({ goals, onToggle, onDelete, onUpdate, editing
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => onDelete(goal.id)}
+                onClick={() => onDelete(goal._id)}
                 className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
               >
                 <Trash2 className="h-3 w-3" />
